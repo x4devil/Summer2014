@@ -8,4 +8,11 @@
     <string name="title_activity_registration">Registration</string>
     <string name="hello_world">Hello world!</string>
 
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="signIn">Вход</string>
+    <string name="signOut">Выход</string>
+    <string name="registration">Регистрация</string>
+    <string name="email">E-mail</string>
+
 </resources>

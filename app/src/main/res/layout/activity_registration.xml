@@ -11,32 +11,101 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true">
+        android:layout_height="fill_parent">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Логин"
-            android:ems="10"
-            android:id="@+id/regLoginEdit"
-            android:layout_gravity="center_horizontal" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/regPasswordEdit"
-            android:text="Пароль" />
-
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Регистрация"
-            android:id="@+id/regBtn"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/registration"
+            android:textSize="40dp"
+            android:id="@+id/textView"
             android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".3"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/login"
+                        android:id="@+id/textView2" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_weight=".7"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:ems="10"
+                        android:id="@+id/regLoginEdit" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".3"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/email"
+                        android:id="@+id/textView3" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_weight=".7"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:ems="10"
+                        android:id="@+id/regEmailEdit" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".3"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/password"
+                        android:id="@+id/textView4" />
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_weight=".7"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberPassword"
+                        android:ems="10"
+                        android:id="@+id/regPasswordEdit" />
+                </TableRow>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/registration"
+                    android:id="@+id/regBtn"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -22,6 +22,8 @@ import com.quickblox.module.users.model.QBUser;
 
 public class SignIn extends ActionBarActivity implements QBCallback, View.OnClickListener{
 
+    private final String TAG = SignIn.class.getSimpleName();
+
     private QBUser user;
     private String login;
     private String password;
@@ -36,7 +38,7 @@ public class SignIn extends ActionBarActivity implements QBCallback, View.OnClic
         setContentView(R.layout.activity_sign_in);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Подключение");
+        progressDialog.setMessage("Подключение к серверу");
 
         loginBtn = (Button)findViewById(R.id.loginBtn);
         loginBtn.setOnClickListener(this);
@@ -68,7 +70,7 @@ public class SignIn extends ActionBarActivity implements QBCallback, View.OnClic
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings || super.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -93,6 +95,7 @@ public class SignIn extends ActionBarActivity implements QBCallback, View.OnClic
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
         finish();
     }
 
@@ -105,15 +108,16 @@ public class SignIn extends ActionBarActivity implements QBCallback, View.OnClic
                 @Override
                 public void onLoginSuccess() {
                     progressDialog.dismiss();
-                    Log.d(this.getClass().getSimpleName(), "Подключились");
+                    Log.d(TAG, " -- Успешное подключение к серверу");
                     Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
 
                 @Override
                 public void onLoginError(String s) {
                     progressDialog.dismiss();
-                    Log.e(this.getClass().getSimpleName(), "Ошибка подключения");
+                    Log.e(TAG, " -- Не удалось войти. Ошибка: " + s);
                 }
             });
         }
