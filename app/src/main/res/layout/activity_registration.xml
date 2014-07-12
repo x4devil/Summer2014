@@ -91,9 +91,10 @@
                         android:layout_width="0dp"
                         android:layout_weight=".7"
                         android:layout_height="wrap_content"
-                        android:inputType="numberPassword"
+                        android:inputType="textPassword"
                         android:ems="10"
                         android:id="@+id/regPasswordEdit" />
+
                 </TableRow>
 
                 <Button

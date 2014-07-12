@@ -1,6 +1,8 @@
 package summer.app;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -83,7 +85,82 @@ public class SignIn extends ActionBarActivity implements QBCallback, View.OnClic
         user = new QBUser(login, password);
         progressDialog.show();
 
-        QBUsers.signIn(user, this);
+        QBUsers.signIn(user, new QBCallback() {
+            @Override
+            public void onComplete(Result result) {
+                if(result.isSuccess()) {
+                    QBChatService.getInstance().loginWithUser(user, new SessionCallback(){
+
+                        @Override
+                        public void onLoginSuccess() {
+                            progressDialog.dismiss();
+                            ((QBConnection)getApplication()).setUser(user);
+                            Log.d(TAG, " -- Вход выполнен успешно");
+                            Intent intent = new Intent();
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onLoginError(String s) {
+                            progressDialog.dismiss();
+                            Log.e(TAG, " -- Не удалось войти. Ошибка: " + s);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(SignIn.this);
+
+                            builder.setTitle("Ошибка")
+                                    .setMessage("Не удалось войти. Повторить попытку?")
+                                    .setPositiveButton("Повторить", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            ((EditText) findViewById(R.id.loginEdit)).setText("");
+                                            ((EditText) findViewById(R.id.passwordEdit)).setText("");
+                                        }
+                                    })
+                                    .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            Intent intent = new Intent();
+                                            setResult(RESULT_CANCELED, intent);
+                                            finish();
+                                        }
+                                    });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
+                    });
+                } else {
+                    progressDialog.dismiss();
+                    Log.e(TAG, " -- Не удалось войти. Ошибка: " + result.getErrors().toString());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SignIn.this);
+
+                    builder.setTitle("Ошибка")
+                            .setMessage("Не удалось войти. Повторить попытку?")
+                            .setPositiveButton("Повторить", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    ((EditText) findViewById(R.id.loginEdit)).setText("");
+                                    ((EditText) findViewById(R.id.passwordEdit)).setText("");
+
+                                }
+                            })
+                            .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent();
+                                    setResult(RESULT_CANCELED, intent);
+                                    finish();
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+
+            @Override
+            public void onComplete(Result result, Object o) {
+
+            }
+        });
     }
     @Override
     public void onDestroy() {
@@ -101,26 +178,7 @@ public class SignIn extends ActionBarActivity implements QBCallback, View.OnClic
 
     @Override
     public void onComplete(Result result) {
-        if(result.isSuccess()) {
-            ((QBConnection)getApplication()).setUser(user);
-            QBChatService.getInstance().loginWithUser(user, new SessionCallback(){
 
-                @Override
-                public void onLoginSuccess() {
-                    progressDialog.dismiss();
-                    Log.d(TAG, " -- Успешное подключение к серверу");
-                    Intent intent = new Intent();
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-
-                @Override
-                public void onLoginError(String s) {
-                    progressDialog.dismiss();
-                    Log.e(TAG, " -- Не удалось войти. Ошибка: " + s);
-                }
-            });
-        }
     }
 
     @Override
