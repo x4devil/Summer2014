@@ -99,7 +99,7 @@ public class MainActivity extends ActionBarActivity implements QBCallback{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ((Button) findViewById(R.id.signOutBtn)).setOnClickListener(signOut);
+        (( Button) findViewById(R.id.signOutBtn)).setOnClickListener(signOut);
         myLogin = (TextView) findViewById(R.id.myLoginView);
 
         QBSettings.getInstance().fastConfigInit(APP_ID, AUTH_KEY, AUTH_SECRET);

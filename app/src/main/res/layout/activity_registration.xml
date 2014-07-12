@@ -87,6 +87,7 @@
                         android:text="@string/password"
                         android:id="@+id/textView4" />
 
+
                     <EditText
                         android:layout_width="0dp"
                         android:layout_weight=".7"
