@@ -21,7 +21,17 @@ import com.quickblox.module.auth.QBAuth;
 import com.quickblox.module.chat.QBChatService;
 import com.quickblox.module.users.model.QBUser;
 import org.jivesoftware.smack.ConnectionListener;
+import com.quickblox.module.users.QBUsers;
+import com.quickblox.module.users.result.QBUserPagedResult;
+import com.quickblox.internal.core.request.QBPagedRequestBuilder;
+import com.quickblox.core.QBCallbackImpl;
 
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity implements QBCallback{
 
@@ -31,6 +41,11 @@ public class MainActivity extends ActionBarActivity implements QBCallback{
     private static final String APP_ID = "11841";
     private static final String AUTH_KEY = "EsVps7wEgBHcabU";
     private static final String AUTH_SECRET = "46QU9T6XR2Sm7ZL";
+
+    private ArrayList <HashMap<String, Object>> myBooks;
+    private static final String TOPKEY = "toptext";
+    private static final String BOTTOMKEY = "bottomtext";
+    private static final String IMGKEY = "iconfromraw";  //Наша будущая картинка
 
     private ProgressDialog progressDialog;
 
@@ -199,6 +214,64 @@ public class MainActivity extends ActionBarActivity implements QBCallback{
                     myLogin.setText(((QBConnection) getApplication()).getUser().getLogin());
 
                     //Показать список контактов
+                    final ArrayList<QBUser> userslist = new ArrayList<QBUser>();
+
+                    QBPagedRequestBuilder pagedRequestBuilder = new QBPagedRequestBuilder();
+                    pagedRequestBuilder.setPage(1);
+                    pagedRequestBuilder.setPerPage(50);
+
+                    QBUsers.getUsers(pagedRequestBuilder, new QBCallbackImpl() {
+                        @Override
+                        public void onComplete(Result result) {
+                            if (result.isSuccess()) {
+                                QBUserPagedResult usersResult = (QBUserPagedResult) result;
+                                ArrayList<QBUser> users = usersResult.getUsers();
+                                QBUser user = ((QBConnection)getApplication()).getUser();
+                                for(int i = 0; i < users.size(); i++){
+                                    if(user.getLogin().compareTo(users.get(i).getLogin()) != 0) {
+                                        userslist.add(users.get(i));
+                                    }
+                                }
+
+                                ListView listView = (ListView)findViewById(R.id.list);
+                                myBooks = new ArrayList<HashMap<String,Object>>();
+                                HashMap<String, Object> hm;
+
+                                for(int i = 0; i < userslist.size(); i++){
+                                    hm = new HashMap<String, Object>();
+                                    hm.put(TOPKEY, userslist.get(i).getLogin());
+                                    hm.put(BOTTOMKEY, userslist.get(i).getId());
+                                    hm.put(IMGKEY,  R.drawable.user_avatar);
+
+                                    myBooks.add(hm);
+                                }
+
+                                SimpleAdapter adapter = new SimpleAdapter(MainActivity.this,
+                                        myBooks,
+                                        R.layout.list, new String[]{
+                                        TOPKEY,         //верхний текст
+                                        BOTTOMKEY,        //нижний теккт
+                                        IMGKEY          //наша картинка
+                                }, new int[]{
+                                        R.id.text1, //ссылка на объект отображающий текст
+                                        R.id.text2, //ссылка на объект отображающий текст
+                                        R.id.img}); //добавили ссылку в чем отображать картинки из list.xml
+
+                                listView.setAdapter(adapter);
+                                listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+                                Log.d("Users: ", users.toString());
+
+                                Log.d("currentPage:", "" + usersResult.getCurrentPage());
+                                Log.d("totalEntries:", "" + usersResult.getTotalEntries());
+                                Log.d("perPage:", "" + usersResult.getPerPage());
+                                Log.d("totalPages:", "" + usersResult.getTotalPages());
+                            } else {
+                                Log.e("Errors", result.getErrors().toString());
+                            }
+                        }
+                    });
+
                 } break;
                 case RESULT_CANCELED : {
                     Log.i(TAG, " -- Закрытие сессии");
